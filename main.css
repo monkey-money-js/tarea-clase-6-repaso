@@ -1,0 +1,12 @@
+*{
+    background-color: #017;
+    color: white;
+    font-family: 'Merriweather', cursive;
+    font-weight: 30px;
+}
+::placeholder{
+    color: white;
+}
+.oculto{
+    display: none;
+}
