@@ -11,7 +11,7 @@ CAN'T DEAL WITH SPAGHETTI CODE HAAAAAAAAAA HELP ME kjkldjgkljdjkljkljjlk
 */
 const $botonCalcular = document.querySelector('#boton-calcular');
 const $botonSiguiente = document.querySelector('#boton-siguiente');
-
+const $botonReset = document.querySelector('#boton-reset');
 
 $botonSiguiente.onclick = function(){
     const numeroMiembros = Number(document.querySelector('.numero-familiares').value);
@@ -20,13 +20,14 @@ $botonSiguiente.onclick = function(){
             crearMiembro(i);
         }
         $botonCalcular.className = '';
+        $botonReset.className = '';
     }
      
 }
 
 function crearMiembro(indice){
     const $nuevoDiv = document.createElement('div');
-
+    $nuevoDiv.className = 'nuevo-div';
     const $nuevoLabel = document.createElement('label');
     $nuevoLabel.textContent = `Miembro de la familia #${indice + 1}`;
     $nuevoDiv.appendChild($nuevoLabel);
@@ -39,9 +40,7 @@ function crearMiembro(indice){
     
 }
 
-/////////////////////////////////////////////////////////////////////////////////////
-
-
+///////////////////////////////////////calculos/////////////////////////////////////////
 $botonCalcular.onclick = function(){
     const $miembroInput = document.querySelectorAll('.miembro');
     const vectorEdades = [];
@@ -63,7 +62,6 @@ $botonCalcular.onclick = function(){
     $divMenorEdad.textContent = `La menor edad es de ${numeroMenor} años.`;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////
 function calcularPromedio(vectorEdades){
     let sumaEdades = 0;
     for (let i=0; i<vectorEdades.length; i++){
@@ -73,8 +71,6 @@ function calcularPromedio(vectorEdades){
     return promedioEdad;
 }
 
-
-/////////////////////////////////////////////////////////////////////////////////////
 function calcularMayorEdad(vectorEdades){
     let numeroMayor = 0;
     for(let i=0; i<vectorEdades.length; i++){
@@ -85,8 +81,6 @@ function calcularMayorEdad(vectorEdades){
     return numeroMayor;
 }
 
-
-/////////////////////////////////////////////////////////////////////////////////////
 function calcularMenorEdad(vectorEdades){
     let numeroMenor = vectorEdades[0];
     for(let i=0; i<vectorEdades.length; i++){
@@ -95,4 +89,12 @@ function calcularMenorEdad(vectorEdades){
         }
     }
     return numeroMenor;
+}
+
+//////////////////////////////////////////reset/////////////////////////////////////////
+$botonReset.onclick() = function(){
+    const $miembro = document.querySelectorAll('.nuevo-div');
+    for(let i=0; i<$miembro.length; i++){
+        $miembro[i].remove();
+    }
 }
