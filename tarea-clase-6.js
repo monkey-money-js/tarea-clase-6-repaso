@@ -52,14 +52,9 @@ $botonCalcular.onclick = function(){
     const numeroMayor = calcularMayorEdad(vectorEdades);
     const numeroMenor = calcularMenorEdad(vectorEdades);
 
-    const $divPromedio = document.querySelector('#promedio-edad');
-    $divPromedio.textContent = `El promedio de edad es de ${promedioEdad.toFixed(2)} años.`;
-
-    const $divMayorEdad = document.querySelector('#mayor-edad');
-    $divMayorEdad.textContent = `La mayor edad es de ${numeroMayor} años.`;
-
-    const $divMenorEdad = document.querySelector('#menor-edad');
-    $divMenorEdad.textContent = `La menor edad es de ${numeroMenor} años.`;
+    document.querySelector('#promedio-edad').textContent = `El promedio de edad es de ${promedioEdad.toFixed(2)} años.`;
+    document.querySelector('#mayor-edad').textContent = `La mayor edad es de ${numeroMayor} años.`;
+    document.querySelector('#menor-edad').textContent = `La menor edad es de ${numeroMenor} años.`;
 }
 
 function calcularPromedio(vectorEdades){
@@ -67,8 +62,7 @@ function calcularPromedio(vectorEdades){
     for (let i=0; i<vectorEdades.length; i++){
         sumaEdades+=vectorEdades[i];
     }
-    const promedioEdad = Number(sumaEdades/vectorEdades.length);
-    return promedioEdad;
+    return Number(sumaEdades/vectorEdades.length);
 }
 
 function calcularMayorEdad(vectorEdades){
