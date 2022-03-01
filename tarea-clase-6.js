@@ -7,7 +7,17 @@ la menor edad y el promedio del grupo familiar.
 Punto bonus: Crear un botón para "empezar de nuevo" que empiece el proceso nuevamente,
 borrando los inputs ya creados (investigar cómo en MDN).
 
-CAN'T DEAL WITH SPAGHETTI CODE HAAAAAAAAAA HELP ME kjkldjgkljdjkljkljjlk
+/*# Tarea clase 8
+
+A las 2 tareas de la clase 6, ponerles las validaciones que consideren necesarias 
+ (regular expressions, objetos, for each, poner estilos, 
+ mostrar los errores en la interfaz de usuario y escribir pruebas),
+ copiar del repositorio original de la tarea 6 y hacerlo bien piola.
+
+ TIP: Las edades no pueden tener decimales.
+
+
+
 */
 const $botonCalcular = document.querySelector('#boton-calcular');
 const $botonSiguiente = document.querySelector('#boton-siguiente');
@@ -16,7 +26,7 @@ const $botonReset = document.querySelector('#boton-reset');
 $botonSiguiente.onclick = function(){
     const numeroMiembros = Number(document.querySelector('.numero-familiares').value);
     borrarMiembrosAnteriores();
-    if (numeroMiembros > 0){
+    if (numeroMiembros > 0 && numeroMiembros < 100){
         for(let i=0; i<numeroMiembros; i++){
             crearMiembro(i);
         }
@@ -25,6 +35,31 @@ $botonSiguiente.onclick = function(){
     }
     
 }
+
+function validarNumeroMiembros(numeroMiembros){
+    if (numeroMiembros === 0){
+        return 'El numero de miembros no puede ser 0';
+    } else if (numeroMiembros > 99){
+        return 'El numero de miembros no puede ser mayor a 99';
+    } else if (!/^[0-9]+$/.test(numeroMiembros)){
+        return 'Este campo solo admite numeros';
+    } else{
+        return '';
+    }
+}
+
+function validarEdadMiembros(edadMiembro){
+    if (edadMiembro === 0){
+        return 'La edad no puede ser 0';
+    } else if (edadMiembro > 200){
+        return 'La edad no puede ser mayor a 200';
+    } else if (!/^[0-9]+$/.test(edadMiembro)){
+        return 'Este campo solo admite numeros naturales';
+    } else{
+        return '';
+    }
+}
+
 
 function crearMiembro(indice){
     const $nuevoDiv = document.createElement('div');
@@ -86,7 +121,7 @@ function calcularMenorEdad(vectorEdades){
 }
 
 //////////////////////////////////////////reset/////////////////////////////////////////
-$botonReset.onclick() = borrarMiembrosAnteriores();
+$botonReset.onclick = borrarMiembrosAnteriores;
 
 function borrarMiembrosAnteriores(){
     const $miembro = document.querySelectorAll('.nuevo-div');
