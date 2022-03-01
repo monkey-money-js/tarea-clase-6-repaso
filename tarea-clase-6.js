@@ -15,6 +15,7 @@ const $botonReset = document.querySelector('#boton-reset');
 
 $botonSiguiente.onclick = function(){
     const numeroMiembros = Number(document.querySelector('.numero-familiares').value);
+    borrarMiembrosAnteriores();
     if (numeroMiembros > 0){
         for(let i=0; i<numeroMiembros; i++){
             crearMiembro(i);
@@ -22,7 +23,7 @@ $botonSiguiente.onclick = function(){
         $botonCalcular.className = '';
         $botonReset.className = '';
     }
-     
+    
 }
 
 function crearMiembro(indice){
@@ -37,7 +38,6 @@ function crearMiembro(indice){
     $nuevoInput.className = 'miembro';
     $nuevoDiv.appendChild($nuevoInput);
     document.querySelector('#div-miembros').appendChild($nuevoDiv);
-    
 }
 
 ///////////////////////////////////////calculos/////////////////////////////////////////
@@ -86,7 +86,9 @@ function calcularMenorEdad(vectorEdades){
 }
 
 //////////////////////////////////////////reset/////////////////////////////////////////
-$botonReset.onclick() = function(){
+$botonReset.onclick() = borrarMiembrosAnteriores();
+
+function borrarMiembrosAnteriores(){
     const $miembro = document.querySelectorAll('.nuevo-div');
     for(let i=0; i<$miembro.length; i++){
         $miembro[i].remove();
