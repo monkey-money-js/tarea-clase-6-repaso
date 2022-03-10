@@ -60,18 +60,19 @@ function validarEdadMiembros(edadMiembro){
     }
 }
 
-
 function crearMiembro(indice){
     const $nuevoDiv = document.createElement('div');
     $nuevoDiv.className = 'nuevo-div';
     const $nuevoLabel = document.createElement('label');
     $nuevoLabel.textContent = `Miembro de la familia #${indice + 1}`;
     $nuevoDiv.appendChild($nuevoLabel);
+    
 
     const $nuevoInput = document.createElement('input');
     $nuevoInput.type = 'number';
     $nuevoInput.className = 'miembro';
     $nuevoDiv.appendChild($nuevoInput);
+
     document.querySelector('#div-miembros').appendChild($nuevoDiv);
 }
 
