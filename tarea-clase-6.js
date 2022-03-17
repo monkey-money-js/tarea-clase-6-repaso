@@ -16,36 +16,110 @@ A las 2 tareas de la clase 6, ponerles las validaciones que consideren necesaria
 
  TIP: Las edades no pueden tener decimales.
 
-
-
 */
+
 const $botonCalcular = document.querySelector('#boton-calcular');
 const $botonSiguiente = document.querySelector('#boton-siguiente');
 const $botonReset = document.querySelector('#boton-reset');
 
+const $numeroMiembros = document.querySelector('#numero-familiares');
+const $errores = document.querySelector('#errores');
+const $resultados = document.querySelector('#resultados');
+
+const miObjeto = {};
+
 $botonSiguiente.onclick = function(){
-    const numeroMiembros = Number(document.querySelector('.numero-familiares').value);
+
+    mostrarErrores();
+
+    const numeroMiembros = Number($numeroMiembros.value);
+    miObjeto.miembros = numeroMiembros;
+
+    const errores = errorNumeroMiembros(numeroMiembros);
+
     borrarMiembrosAnteriores();
-    if (numeroMiembros > 0 && numeroMiembros < 100){
+
+    if (errores === 0){
         for(let i=0; i<numeroMiembros; i++){
             crearMiembro(i);
         }
-        $botonCalcular.className = '';
-        $botonReset.className = '';
+        mostrarBotones();
+        ocultarErrores();
     }
     
 }
 
+function crearMiembro(indice){
+    const $nuevoDiv = document.createElement('div');
+    $nuevoDiv.className = 'nuevo-div';
+    const $nuevoLabel = document.createElement('label');
+    $nuevoLabel.textContent = `Miembro de la familia #${indice + 1}`;
+    $nuevoDiv.appendChild($nuevoLabel);
+    
+    const $nuevoInputEdad = document.createElement('input');
+    $nuevoInputEdad.type = 'number';
+    $nuevoInputEdad.className = 'miembro';
+    $nuevoInputEdad.classList.add(`edad-${String(indice+1)}`);
+    $nuevoDiv.appendChild($nuevoInputEdad);
+
+    document.querySelector('#div-miembros').appendChild($nuevoDiv);
+}
+
+
+///////////////////////////////////////calculos/////////////////////////////////////////
+$botonCalcular.onclick = function(){
+    const $miembroInput = document.querySelectorAll('.miembro');
+    const vectorEdades = [];
+
+    for(let i=0; i<$miembroInput.length; i++){
+        vectorEdades.push(Number($miembroInput[i].value));
+    }
+    miObjeto.vectorEdad = vectorEdades;
+
+    const contadorErrores = errorEdadesMiembros(vectorEdades);
+
+    if (contadorErrores === 0){
+        const promedioEdad = calcularPromedio(vectorEdades);
+        const numeroMayor = calcularMayor(vectorEdades);
+        const numeroMenor = calcularMenor(vectorEdades);
+
+        const edades = {
+            promedio: promedioEdad,
+            mayor: numeroMayor,
+            menor: numeroMenor
+        }
+
+        mostrarResultados(edades);
+    }
+    
+}
+
+///////////////////////////////////////errores/////////////////////////////////////////
 function validarNumeroMiembros(numeroMiembros){
     if (numeroMiembros === 0){
         return 'El numero de miembros no puede ser 0';
     } else if (numeroMiembros > 99){
         return 'El numero de miembros no puede ser mayor a 99';
     } else if (!/^[0-9]+$/.test(numeroMiembros)){
-        return 'Este campo solo admite numeros';
+        return 'Este campo solo admite numeros naturales';
     } else{
         return '';
     }
+}
+
+function errorNumeroMiembros(miembros){
+    const errorNumeroMiembros = validarNumeroMiembros(miembros);
+    let contadorErrores = 0;
+    borrarErrores();
+    if (errorNumeroMiembros) {
+        contadorErrores++;
+        const $error = document.createElement('li');
+        $error.className = 'error-list';
+        $numeroMiembros.className = 'error';
+        $error.textContent = errorNumeroMiembros;
+        $errores.appendChild($error);
+    }
+    return contadorErrores;
 }
 
 function validarEdadMiembros(edadMiembro){
@@ -60,73 +134,71 @@ function validarEdadMiembros(edadMiembro){
     }
 }
 
-function crearMiembro(indice){
-    const $nuevoDiv = document.createElement('div');
-    $nuevoDiv.className = 'nuevo-div';
-    const $nuevoLabel = document.createElement('label');
-    $nuevoLabel.textContent = `Miembro de la familia #${indice + 1}`;
-    $nuevoDiv.appendChild($nuevoLabel);
-    
-
-    const $nuevoInput = document.createElement('input');
-    $nuevoInput.type = 'number';
-    $nuevoInput.className = 'miembro';
-    $nuevoDiv.appendChild($nuevoInput);
-
-    document.querySelector('#div-miembros').appendChild($nuevoDiv);
-}
-
-///////////////////////////////////////calculos/////////////////////////////////////////
-$botonCalcular.onclick = function(){
-    const $miembroInput = document.querySelectorAll('.miembro');
-    const vectorEdades = [];
-    for(let i=0; i<$miembroInput.length; i++){
-        vectorEdades.push(Number($miembroInput[i].value));
-    }
-    
-    const promedioEdad = calcularPromedio(vectorEdades);
-    const numeroMayor = calcularMayorEdad(vectorEdades);
-    const numeroMenor = calcularMenorEdad(vectorEdades);
-
-    document.querySelector('#promedio-edad').textContent = `El promedio de edad es de ${promedioEdad.toFixed(2)} años.`;
-    document.querySelector('#mayor-edad').textContent = `La mayor edad es de ${numeroMayor} años.`;
-    document.querySelector('#menor-edad').textContent = `La menor edad es de ${numeroMenor} años.`;
-}
-
-function calcularPromedio(vectorEdades){
-    let sumaEdades = 0;
-    for (let i=0; i<vectorEdades.length; i++){
-        sumaEdades+=vectorEdades[i];
-    }
-    return Number(sumaEdades/vectorEdades.length);
-}
-
-function calcularMayorEdad(vectorEdades){
-    let numeroMayor = 0;
-    for(let i=0; i<vectorEdades.length; i++){
-        if(vectorEdades[i] > numeroMayor){
-            numeroMayor = vectorEdades[i];
+function errorEdadesMiembros(vectorEdad){
+    let errorEdadesMiembros;
+    let contadorErrores = 0;
+    for (let i=0; i<miObjeto.miembros; i++){
+        errorEdadesMiembros = validarEdadMiembros(vectorEdad[i]);
+        if (errorEdadesMiembros){
+            contadorErrores++;
+            //$error.className = 'error-list';
+            document.querySelector(`.edad-${String(i+1)}`).classList.add('error');
+            //$error.textContent = errorEdadesMiembros;
+            //$errores.appendChild($error);
         }
     }
-    return numeroMayor;
+    return contadorErrores;
 }
 
-function calcularMenorEdad(vectorEdades){
-    let numeroMenor = vectorEdades[0];
-    for(let i=0; i<vectorEdades.length; i++){
-        if(vectorEdades[i] < numeroMenor){
-            numeroMenor = vectorEdades[i];
-        }
-    }
-    return numeroMenor;
+function mostrarErrores() {
+    $errores.className = '';
+}
+
+function borrarErrores(){
+    document.querySelectorAll('.error-list').forEach(function(error){
+        error.remove();
+    });
+}
+
+function ocultarErrores() {
+    $errores.className = 'oculto';
+    $numeroMiembros.className = '';
 }
 
 //////////////////////////////////////////reset/////////////////////////////////////////
 $botonReset.onclick = borrarMiembrosAnteriores;
-
 function borrarMiembrosAnteriores(){
+    ocultarBotones();
+    borrarResultados();
+    $numeroMiembros.value = null;
     const $miembro = document.querySelectorAll('.nuevo-div');
-    for(let i=0; i<$miembro.length; i++){
-        $miembro[i].remove();
-    }
+    $miembro.forEach( element => element.remove() );
+}
+
+function ocultarBotones(){
+    $botonCalcular.className = 'oculto';
+    $botonReset.className = 'oculto';
+}
+
+function mostrarBotones(){
+    $botonCalcular.className = '';
+    $botonReset.className = '';
+}
+
+function borrarResultados(){
+    document.querySelector('#resultados').textContent = '';
+}
+
+function mostrarResultados(edades){
+    const $divPromedioEdad = document.createElement('div');
+    $divPromedioEdad.textContent = `El promedio de edad es de ${edades.promedio.toFixed(2)} años.`;
+    $resultados.appendChild($divPromedioEdad);
+
+    const $divMayorEdad = document.createElement('div');
+    $divMayorEdad.textContent = `La mayor edad es de ${edades.mayor} años.`;
+    $resultados.appendChild($divMayorEdad);
+
+    const $divMenorEdad = document.createElement('div');
+    $divMenorEdad.textContent = `La menor edad es de ${edades.menor} años.`;
+    $resultados.appendChild($divMenorEdad);
 }

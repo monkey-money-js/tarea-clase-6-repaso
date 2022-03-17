@@ -8,7 +8,7 @@ function pruebaValidarNumeroMiembros(){
         'validarNumeroMiembros no comprobo que el numero de miembros sea menor a 100'
     )
     console.assert(
-        validarNumeroMiembros('dsadsad') === 'Este campo solo admite numeros',
+        validarNumeroMiembros('dsadsad') === 'Este campo solo admite numeros naturales',
         'validarNumeroMiembros no comprobo que el numero de miembros sean solo numeros'
     )
 }
