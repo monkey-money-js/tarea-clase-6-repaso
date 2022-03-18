@@ -68,6 +68,7 @@ function crearMiembro(indice){
 
 ///////////////////////////////////////calculos/////////////////////////////////////////
 $botonCalcular.onclick = function(){
+    borrarErrores();
     const $miembroInput = document.querySelectorAll('.miembro');
     const vectorEdades = [];
 
