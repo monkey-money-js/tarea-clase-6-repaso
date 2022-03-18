@@ -141,12 +141,14 @@ function errorEdadesMiembros(vectorEdad){
         errorEdadesMiembros = validarEdadMiembros(vectorEdad[i]);
         if (errorEdadesMiembros){
             contadorErrores++;
-            //$error.className = 'error-list';
+            const $errorLi = document.createElement('li');
+            $errorLi.className = 'error-list';
             document.querySelector(`.edad-${String(i+1)}`).classList.add('error');
-            //$error.textContent = errorEdadesMiembros;
-            //$errores.appendChild($error);
+            $errorLi.textContent = errorEdadesMiembros;
+            $errores.appendChild($errorLi);
         }
     }
+    mostrarErrores();
     return contadorErrores;
 }
 
