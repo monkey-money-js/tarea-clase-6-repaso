@@ -69,6 +69,7 @@ function crearMiembro(indice){
 ///////////////////////////////////////calculos/////////////////////////////////////////
 $botonCalcular.onclick = function(){
     borrarErrores();
+    borrarResultados();
     const $miembroInput = document.querySelectorAll('.miembro');
     const vectorEdades = [];
 
@@ -80,6 +81,7 @@ $botonCalcular.onclick = function(){
     const contadorErrores = errorEdadesMiembros(vectorEdades);
 
     if (contadorErrores === 0){
+        borrarBordes();
         const promedioEdad = calcularPromedio(vectorEdades);
         const numeroMayor = calcularMayor(vectorEdades);
         const numeroMenor = calcularMenor(vectorEdades);
@@ -168,7 +170,13 @@ function ocultarErrores() {
     $numeroMiembros.className = '';
 }
 
-//////////////////////////////////////////reset/////////////////////////////////////////
+function borrarBordes(){
+    const $redNode = document.querySelectorAll('.error');
+    for (let i=0; i<$redNode.length; i++){
+        $redNode[i].classList.remove('error');
+    }
+}
+////////////////////////////////////reset/////////////////////////////////////////
 $botonReset.onclick = borrarMiembrosAnteriores;
 function borrarMiembrosAnteriores(){
     ocultarBotones();
