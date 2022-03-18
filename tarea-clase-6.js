@@ -172,9 +172,7 @@ function ocultarErrores() {
 
 function borrarBordes(){
     const $redNode = document.querySelectorAll('.error');
-    for (let i=0; i<$redNode.length; i++){
-        $redNode[i].classList.remove('error');
-    }
+    $redNode.forEach( element => element.classList.remove('error'));
 }
 ////////////////////////////////////reset/////////////////////////////////////////
 $botonReset.onclick = borrarMiembrosAnteriores;
