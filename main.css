@@ -1,12 +1,40 @@
-*{
-    background-color: #017;
-    color: white;
-    font-family: 'Merriweather', cursive;
-    font-weight: 30px;
+body {
+    font-family: 'Roboto', sans-serif;
+    font-weight: lighter;
+    position: relative;
+    font-size: 20px;
+    line-height: 20px;
+    background-color: rgb(25, 105, 196);
+    color: rgba(202, 209, 159, 0.801);
 }
+
 ::placeholder{
-    color: white;
+    color: rgba(39, 38, 38, 0.425);
 }
+
 .oculto{
     display: none;
 }
+
+#div-miembros {
+    position: relative;
+}
+
+input {
+    border: 2px solid rgba(0, 0, 0, 0.301);
+    margin: 10px;
+}
+
+.nuevo-div {
+    margin-top: 5px;
+}
+
+.error {
+    border: 2px solid red;
+}
+
+#errores {
+    text-align: center;
+}
+
+
