@@ -1,26 +1,26 @@
-function calcularPromedio(vectorEdades){
-    let sumaEdades = 0;
-    for (let i=0; i<vectorEdades.length; i++){
-        sumaEdades+=vectorEdades[i];
+function calcularPromedio(numeros){
+    let acumulador = 0;
+    for (let i=0; i<numeros.length; i++){
+        acumulador+=numeros[i];
     }
-    return Number(sumaEdades/vectorEdades.length);
+    return acumulador/numeros.length;
 }
 
-function calcularMayor(vectorEdades){
+function calcularMayor(numeros){
     let numeroMayor = 0;
-    for(let i=0; i<vectorEdades.length; i++){
-        if(vectorEdades[i] > numeroMayor){
-            numeroMayor = vectorEdades[i];
+    for(let i=0; i<numeros.length; i++){
+        if(numeros[i] > numeroMayor){
+            numeroMayor = numeros[i];
         }
     }
     return numeroMayor;
 }
 
-function calcularMenor(vectorEdades){
-    let numeroMenor = vectorEdades[0];
-    for(let i=0; i<vectorEdades.length; i++){
-        if(vectorEdades[i] < numeroMenor){
-            numeroMenor = vectorEdades[i];
+function calcularMenor(numeros){
+    let numeroMenor = numeros[0];
+    for(let i=0; i<numeros.length; i++){
+        if(numeros[i] < numeroMenor){
+            numeroMenor = numeros[i];
         }
     }
     return numeroMenor;

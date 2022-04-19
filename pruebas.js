@@ -28,5 +28,12 @@ function pruebaValidarEdadMiembros(){
     )
 }
 
+function pruebaValidarSueldoMiembros(){
+    console.assert(
+        validarSueldoMiembros(-1) === 'El sueldo no puede ser menor a 0',
+        'validarSueldoMiembros no comprobo que el sueldo sea menor a 0'
+    )
+}
 pruebaValidarNumeroMiembros();
 pruebaValidarEdadMiembros();
+pruebaValidarSueldoMiembros();

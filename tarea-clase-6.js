@@ -22,20 +22,20 @@ const $botonCalcular = document.querySelector('#boton-calcular');
 const $botonSiguiente = document.querySelector('#boton-siguiente');
 const $botonReset = document.querySelector('#boton-reset');
 
-const $numeroMiembros = document.querySelector('#numero-familiares');
+const $numeroFamiliares = document.querySelector('#numero-familiares');
 const $errores = document.querySelector('#errores');
 const $resultados = document.querySelector('#resultados');
 
-const miObjeto = {};
+const numeros = {};
 
 $botonSiguiente.onclick = function(){
 
     mostrarErrores();
 
-    const numeroMiembros = Number($numeroMiembros.value);
-    miObjeto.miembros = numeroMiembros;
+    const numeroMiembros = Number($numeroFamiliares.value);
+    numeros.miembros = numeroMiembros;
 
-    const errores = errorNumeroMiembros(numeroMiembros);
+    const errores = evaluarErrorNumeroMiembros(numeroMiembros);
 
     borrarMiembrosAnteriores();
 
@@ -45,6 +45,20 @@ $botonSiguiente.onclick = function(){
         }
         mostrarBotones();
         ocultarErrores();
+        
+    }
+
+    const $nodeBotonSueldo = document.querySelectorAll('.boton-sueldo');
+    const $nodeBotonQuitarSueldo = document.querySelectorAll('.boton-quitar-sueldo');
+    const $nodeInputSueldo = document.querySelectorAll('.sueldo');
+    for (let i=0; i<$nodeBotonSueldo.length; i++){
+        $nodeBotonSueldo[i].onclick = function(){
+            $nodeInputSueldo[i].classList.remove('oculto'); 
+        }
+        $nodeBotonQuitarSueldo[i].onclick = function(){
+            $nodeInputSueldo[i].value = null;
+            $nodeInputSueldo[i].classList.add('oculto');
+        }
     }
     
 }
@@ -52,6 +66,7 @@ $botonSiguiente.onclick = function(){
 function crearMiembro(indice){
     const $nuevoDiv = document.createElement('div');
     $nuevoDiv.className = 'nuevo-div';
+
     const $nuevoLabel = document.createElement('label');
     $nuevoLabel.textContent = `Miembro de la familia #${indice + 1}`;
     $nuevoDiv.appendChild($nuevoLabel);
@@ -62,42 +77,74 @@ function crearMiembro(indice){
     $nuevoInputEdad.classList.add(`edad-${String(indice+1)}`);
     $nuevoDiv.appendChild($nuevoInputEdad);
 
+    const $botonSueldo = document.createElement('button');
+    $botonSueldo.type = 'button';
+    $botonSueldo.className = 'boton-sueldo';
+    $botonSueldo.textContent = 'Agregar sueldo';
+    $nuevoDiv.appendChild($botonSueldo);
+
+    const $botonQuitarSueldo = document.createElement('button');
+    $botonQuitarSueldo.type = 'button';
+    $botonQuitarSueldo.className = 'boton-quitar-sueldo';
+    $botonQuitarSueldo.textContent = 'Quitar sueldo';
+    $nuevoDiv.appendChild($botonQuitarSueldo);
+    
+    const $nuevoInputSueldo = document.createElement('input');
+    $nuevoInputSueldo.type = 'number';
+    $nuevoInputSueldo.className = `sueldo`;
+    $nuevoInputSueldo.classList.add('oculto');
+    $nuevoInputSueldo.classList.add(`sueldo-${String(indice+1)}`);
+    $nuevoDiv.appendChild($nuevoInputSueldo);
+
     document.querySelector('#div-miembros').appendChild($nuevoDiv);
 }
 
-
-///////////////////////////////////////calculos/////////////////////////////////////////
 $botonCalcular.onclick = function(){
     borrarErrores();
     borrarResultados();
     const $miembroInput = document.querySelectorAll('.miembro');
+    const $sueldoInput = document.querySelectorAll('.sueldo');
     const vectorEdades = [];
+    const vectorSueldos= [];
+    const vectorSueldosCompleto = [];
 
     for(let i=0; i<$miembroInput.length; i++){
         vectorEdades.push(Number($miembroInput[i].value));
+        vectorSueldosCompleto.push(Number($sueldoInput[i].value));
+        if (Number($sueldoInput[i].value) > 0){
+            vectorSueldos.push(Number($sueldoInput[i].value));
+        }
     }
-    miObjeto.vectorEdad = vectorEdades;
 
-    const contadorErrores = errorEdadesMiembros(vectorEdades);
+    numeros.vectorEdad = vectorEdades;
+    numeros.vectorSueldo = vectorSueldos;
+    numeros.vectorSueldoCompleto = vectorSueldosCompleto;
+
+    const contadorErrores = evaluarErroresMiembros(numeros);
 
     if (contadorErrores === 0){
         borrarBordes();
         const promedioEdad = calcularPromedio(vectorEdades);
-        const numeroMayor = calcularMayor(vectorEdades);
-        const numeroMenor = calcularMenor(vectorEdades);
+        const edadMayor = calcularMayor(vectorEdades);
+        const edadMenor = calcularMenor(vectorEdades);
 
-        const edades = {
-            promedio: promedioEdad,
-            mayor: numeroMayor,
-            menor: numeroMenor
-        }
+        const promedioSueldo = calcularPromedio(vectorSueldos);
+        const sueldoMayor = calcularMayor(vectorSueldos);
+        const sueldoMenor = calcularMenor(vectorSueldos);
 
-        mostrarResultados(edades);
+        numeros.edadPromedio = promedioEdad;
+        numeros.edadMayor = edadMayor;
+        numeros.edadMenor = edadMenor;
+
+        numeros.sueldoPromedio = promedioSueldo;
+        numeros.sueldoMayor = sueldoMayor;
+        numeros.sueldoMenor = sueldoMenor;
+
+        mostrarResultados(numeros);
     }
     
 }
 
-///////////////////////////////////////errores/////////////////////////////////////////
 function validarNumeroMiembros(numeroMiembros){
     if (numeroMiembros === 0){
         return 'El numero de miembros no puede ser 0';
@@ -110,7 +157,7 @@ function validarNumeroMiembros(numeroMiembros){
     }
 }
 
-function errorNumeroMiembros(miembros){
+function evaluarErrorNumeroMiembros(miembros){
     const errorNumeroMiembros = validarNumeroMiembros(miembros);
     let contadorErrores = 0;
     borrarErrores();
@@ -118,7 +165,7 @@ function errorNumeroMiembros(miembros){
         contadorErrores++;
         const $error = document.createElement('li');
         $error.className = 'error-list';
-        $numeroMiembros.className = 'error';
+        $numeroFamiliares.className = 'error';
         $error.textContent = errorNumeroMiembros;
         $errores.appendChild($error);
     }
@@ -137,18 +184,38 @@ function validarEdadMiembros(edadMiembro){
     }
 }
 
-function errorEdadesMiembros(vectorEdad){
-    let errorEdadesMiembros;
+function validarSueldoMiembros(sueldoMiembro){
+    if (sueldoMiembro < 0){
+        return 'El sueldo no puede ser menor a 0';
+    }
+    else{
+        return '';
+    }
+}
+
+function evaluarErroresMiembros(numeros){
+    let errorEdadesMiembros; 
+    let errorSueldosMiembros;
     let contadorErrores = 0;
-    for (let i=0; i<miObjeto.miembros; i++){
-        errorEdadesMiembros = validarEdadMiembros(vectorEdad[i]);
+    for (let i=0; i<numeros.vectorEdad.length; i++){
+        errorEdadesMiembros = validarEdadMiembros(numeros.vectorEdad[i]);
+        errorSueldosMiembros = validarSueldoMiembros(numeros.vectorSueldoCompleto[i]);
         if (errorEdadesMiembros){
             contadorErrores++;
-            const $errorLi = document.createElement('li');
-            $errorLi.className = 'error-list';
+            const $errorEdad = document.createElement('li');
+            $errorEdad.className = 'error-list';
             document.querySelector(`.edad-${String(i+1)}`).classList.add('error');
-            $errorLi.textContent = errorEdadesMiembros;
-            $errores.appendChild($errorLi);
+            $errorEdad.textContent = errorEdadesMiembros;
+            $errores.appendChild($errorEdad);
+        }
+        if (errorSueldosMiembros){
+            contadorErrores++;
+            const $errorSueldo = document.createElement('li');
+            $errorSueldo.className = 'error-list';
+            document.querySelector(`.sueldo-${String(i+1)}`).classList.add('error');
+            $errorSueldo.textContent = errorSueldosMiembros;
+            $errores.appendChild($errorSueldo);
+            /// QUE PASA SI UN MIEMBRO DE LA FAMILIA NO TIENE SUELDO???? ERROR
         }
     }
     mostrarErrores();
@@ -167,19 +234,20 @@ function borrarErrores(){
 
 function ocultarErrores() {
     $errores.className = 'oculto';
-    $numeroMiembros.className = '';
+    $numeroFamiliares.className = '';
 }
 
 function borrarBordes(){
     const $redNode = document.querySelectorAll('.error');
     $redNode.forEach( element => element.classList.remove('error'));
 }
-////////////////////////////////////reset/////////////////////////////////////////
+
 $botonReset.onclick = borrarMiembrosAnteriores;
 function borrarMiembrosAnteriores(){
+    borrarErrores();
     ocultarBotones();
     borrarResultados();
-    $numeroMiembros.value = null;
+    $numeroFamiliares.value = null;
     const $miembro = document.querySelectorAll('.nuevo-div');
     $miembro.forEach( element => element.remove() );
 }
@@ -198,16 +266,24 @@ function borrarResultados(){
     document.querySelector('#resultados').textContent = '';
 }
 
-function mostrarResultados(edades){
-    const $divPromedioEdad = document.createElement('div');
-    $divPromedioEdad.textContent = `El promedio de edad es de ${edades.promedio.toFixed(2)} años.`;
-    $resultados.appendChild($divPromedioEdad);
+function mostrarResultados(numeros){
+    const $promedioEdad = document.createElement('li');
+    $promedioEdad.textContent = `El promedio de edad es de ${numeros.edadPromedio.toFixed(2)} años.`;
+    $resultados.appendChild($promedioEdad);
+    const $mayorEdad = document.createElement('li');
+    $mayorEdad.textContent = `La mayor edad es de ${numeros.edadMayor} años.`;
+    $resultados.appendChild($mayorEdad);
+    const $menorEdad = document.createElement('li');
+    $menorEdad.textContent = `La menor edad es de ${numeros.edadMenor} años.`;
+    $resultados.appendChild($menorEdad);
 
-    const $divMayorEdad = document.createElement('div');
-    $divMayorEdad.textContent = `La mayor edad es de ${edades.mayor} años.`;
-    $resultados.appendChild($divMayorEdad);
-
-    const $divMenorEdad = document.createElement('div');
-    $divMenorEdad.textContent = `La menor edad es de ${edades.menor} años.`;
-    $resultados.appendChild($divMenorEdad);
+    const $promedioSueldo = document.createElement('li');
+    $promedioSueldo.textContent = `El promedio de sueldo es de $${numeros.sueldoPromedio.toFixed(2)} .`;
+    $resultados.appendChild($promedioSueldo);
+    const $mayorSueldo = document.createElement('li');
+    $mayorSueldo.textContent = `El mayor sueldo es de $${numeros.sueldoMayor} .`;
+    $resultados.appendChild($mayorSueldo);
+    const $menorSueldo = document.createElement('li');
+    $menorSueldo.textContent = `El menor sueldo es de $${numeros.sueldoMenor} .`;
+    $resultados.appendChild($menorSueldo);
 }
